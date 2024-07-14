@@ -45,10 +45,7 @@ public partial class JSReadableStreamBinder :
 	private async Task InitAsync(IJSRuntime jsrt, IJSObjectReference readable_stream)
 	{
 		await using JSModule module = new(jsrt, "./_content/JSInteropLib/ReadableStreamBinder.js");
-
-		Projection = await module.InvokeAsync<IJSObjectReference>("ReadableStreamBinder.create",
-			readable_stream);
-
+		Projection = await module.InvokeAsync<IJSObjectReference>("ReadableStreamBinder.create", readable_stream);
 		_init_tcs.TrySetResult();
 	}
 
