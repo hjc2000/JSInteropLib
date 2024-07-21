@@ -121,12 +121,14 @@ public partial class JSOp
 
 	/// <summary>
 	///		向 head 标签中添加 script 标签，添加成功后会回调 helper 中的 CallbackAction。
-	///		本函数会先检查是否已经添加 script_url 的脚本，如果已经添加，不会再次添加。
 	/// </summary>
+	/// <remarks>
+	///		本函数会先检查是否已经添加 script_url 的脚本，如果已经添加，不会再次添加。
+	/// </remarks>
 	/// <param name="scriptUrl"></param>
 	/// <param name="helper"></param>
 	/// <returns></returns>
-	private async ValueTask AddScript(string scriptUrl, CallbackHelper helper)
+	private async ValueTask AddScriptAsync(string scriptUrl, CallbackHelper helper)
 	{
 		if (await IsScriptAlreadyIncluded(scriptUrl))
 		{
@@ -153,8 +155,34 @@ public partial class JSOp
 			addScriptComplete.TrySetResult();
 		};
 
-		await AddScript(script_url, callbackHelper);
+		await AddScriptAsync(script_url, callbackHelper);
 		await addScriptComplete.Task;
+	}
+
+	/// <summary>
+	///		检查指定的 css 是否已经添加过了。
+	/// </summary>
+	/// <param name="url">css 的 URL。</param>
+	/// <returns>已经添加过了返回 true，没有添加过返回 false。</returns>
+	public async Task<bool> IsCssAlreadyIncluded(string url)
+	{
+		return await _jsm.InvokeAsync<bool>("IsCssAlreadyIncluded", url);
+	}
+
+	/// <summary>
+	///		添加指定 URL 的 css 文件。
+	/// </summary>
+	/// <param name="url">css 文件的 URL。</param>
+	/// <returns></returns>
+	public async Task AddCssAsync(string url)
+	{
+		if (await IsCssAlreadyIncluded(url))
+		{
+			// 已经添加过的不重复添加
+			return;
+		}
+
+		await _jsm.InvokeVoidAsync("AddCss", url);
 	}
 }
 #endregion

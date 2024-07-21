@@ -68,6 +68,25 @@ export async function TriggerClickEvent(element)
 }
 
 /**
+ * 检查指定源的脚本是不是已经包含了。
+ * @param {string} src 脚本源。一般是 url。
+ * @returns
+ */
+export function IsScriptAlreadyIncluded(src)
+{
+	var scripts = document.getElementsByTagName('script');
+	for (var i = 0; i < scripts.length; i++)
+	{
+		if (scripts[i].getAttribute('src') === src)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
+/**
  * 向 head 标签添加 script 标签
  * @param {string} scriptUrl
  * @param {object} callbackHelper CallbackHelper 对象的 DotNetHelper 属性
@@ -75,15 +94,48 @@ export async function TriggerClickEvent(element)
 export function AddScript(scriptUrl, callbackHelper)
 {
 	var head = document.head;
-	var script = document.createElement('script');
-	script.setAttribute("src", scriptUrl);
+	var element = document.createElement('script');
+	element.setAttribute("src", scriptUrl);
 	let onloadHandler = function ()
 	{
 		callbackHelper.invokeMethodAsync("Invoke");
-		script.removeEventListener("load", onloadHandler);
+		element.removeEventListener("load", onloadHandler);
 	}
-	script.addEventListener("load", onloadHandler);
-	head.appendChild(script);
+
+	element.addEventListener("load", onloadHandler);
+	head.appendChild(element);
+}
+
+/**
+ * 检测指定的 css 是否已经被添加了
+ * @param {string} href css 的 URL
+ * @returns 已经添加了返回 true，没有添加返回 false。
+ */
+function IsCssAlreadyIncluded(href)
+{
+	var links = document.getElementsByTagName('link');
+	for (var i = 0; i < links.length; i++)
+	{
+		if (links[i].href === href && links[i].rel.toLowerCase() === 'stylesheet')
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
+/**
+ * 添加一个指定路径的 css 文件
+ * @param {string} href css 的 URL
+ */
+export function AddCss(href)
+{
+	var head = document.head;
+	var element = document.createElement('link');
+	element.setAttribute("href", href);
+	element.setAttribute("rel", "stylesheet");
+	head.appendChild(element);
 }
 
 /**
@@ -136,25 +188,6 @@ export function ScrollIntoView(id)
 		return;
 	}
 	catch { }
-}
-
-/**
- * 检查指定源的脚本是不是已经包含了。
- * @param {string} src 脚本源。一般是 url。
- * @returns
- */
-export function IsScriptAlreadyIncluded(src)
-{
-	var scripts = document.getElementsByTagName('script');
-	for (var i = 0; i < scripts.length; i++)
-	{
-		if (scripts[i].getAttribute('src') === src)
-		{
-			return true;
-		}
-	}
-
-	return false;
 }
 
 /**
