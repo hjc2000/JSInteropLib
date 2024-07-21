@@ -111,7 +111,7 @@ export function AddScript(scriptUrl, callbackHelper)
  * @param {string} href css 的 URL
  * @returns 已经添加了返回 true，没有添加返回 false。
  */
-function IsCssAlreadyIncluded(href)
+export function IsCssAlreadyIncluded(href)
 {
 	var links = document.getElementsByTagName('link');
 	for (var i = 0; i < links.length; i++)
