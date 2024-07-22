@@ -246,5 +246,15 @@ public partial class JSOp
 	{
 		await _jsm.InvokeVoidAsync("SetElementStyle", element, styleName, style);
 	}
+
+	/// <summary>
+	///		添加字符串的 css 文本到 style 标签中，然后将 style 标签放到 head 标签中。
+	/// </summary>
+	/// <param name="cssText"></param>
+	/// <returns></returns>
+	public async Task AddStyleAsync(string cssText)
+	{
+		await _jsm.InvokeVoidAsync("AddStyleByString", cssText);
+	}
 }
 #endregion

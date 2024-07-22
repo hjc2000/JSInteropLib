@@ -74,8 +74,8 @@ export async function TriggerClickEvent(element)
  */
 export function IsScriptAlreadyIncluded(src)
 {
-	var scripts = document.getElementsByTagName('script');
-	for (var i = 0; i < scripts.length; i++)
+	let scripts = document.getElementsByTagName('script');
+	for (let i = 0; i < scripts.length; i++)
 	{
 		if (scripts[i].getAttribute('src') === src)
 		{
@@ -93,8 +93,7 @@ export function IsScriptAlreadyIncluded(src)
  */
 export function AddScript(scriptUrl, callbackHelper)
 {
-	var head = document.head;
-	var element = document.createElement('script');
+	let element = document.createElement('script');
 	element.setAttribute("src", scriptUrl);
 	let onloadHandler = function ()
 	{
@@ -103,6 +102,8 @@ export function AddScript(scriptUrl, callbackHelper)
 	}
 
 	element.addEventListener("load", onloadHandler);
+
+	let head = document.head;
 	head.appendChild(element);
 }
 
@@ -113,8 +114,8 @@ export function AddScript(scriptUrl, callbackHelper)
  */
 export function IsCssAlreadyIncluded(href)
 {
-	var links = document.getElementsByTagName('link');
-	for (var i = 0; i < links.length; i++)
+	let links = document.getElementsByTagName('link');
+	for (let i = 0; i < links.length; i++)
 	{
 		if (links[i].href === href && links[i].rel.toLowerCase() === 'stylesheet')
 		{
@@ -131,11 +132,23 @@ export function IsCssAlreadyIncluded(href)
  */
 export function AddCss(href)
 {
-	var head = document.head;
-	var element = document.createElement('link');
+	let element = document.createElement('link');
 	element.setAttribute("href", href);
 	element.setAttribute("rel", "stylesheet");
+	let head = document.head;
 	head.appendChild(element);
+}
+
+/**
+ * 动态添加内联样式到页面的 head 中
+ * @param {string} cssText 包含 CSS 规则的字符串
+ */
+export function AddStyleByString(cssText)
+{
+	let styleElement = document.createElement('style');
+	styleElement.textContent = cssText;
+	let head = document.head;
+	head.appendChild(styleElement);
 }
 
 /**
