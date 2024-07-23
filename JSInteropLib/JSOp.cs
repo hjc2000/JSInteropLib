@@ -4,9 +4,18 @@ using Microsoft.JSInterop;
 namespace JSInteropLib;
 
 #region 生命周期
+/// <summary>
+///		封装一些 js 操作。
+/// </summary>
+/// <param name="jsrt"></param>
 public partial class JSOp(IJSRuntime jsrt) : IAsyncDisposable
 {
 	private bool _disposed = false;
+
+	/// <summary>
+	///		释放后无法再进行 js 操作。
+	/// </summary>
+	/// <returns></returns>
 	public async ValueTask DisposeAsync()
 	{
 		if (_disposed)
@@ -33,26 +42,51 @@ public partial class JSOp(IJSRuntime jsrt) : IAsyncDisposable
 #region 调试相关
 public partial class JSOp
 {
+	/// <summary>
+	///		调用 js 向控制台打印。
+	///		本重载是打印一个换行符。
+	/// </summary>
 	public void Log()
 	{
 		Log('\n');
 	}
 
+	/// <summary>
+	///		调用 js 向控制台打印。
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
+	/// <param name="data"></param>
 	public async void Log<T>(T data)
 	{
 		await _jsm.InvokeVoidAsync("Log", data);
 	}
 
+	/// <summary>
+	///		以异步的方式调用 js 向控制台打印内容。
+	///		本重载是打印一个换行符。
+	/// </summary>
+	/// <returns></returns>
 	public async ValueTask LogAsync()
 	{
 		await LogAsync('\n');
 	}
 
+	/// <summary>
+	///		以异步的方式调用 js 向控制台打印内容。
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
+	/// <param name="data"></param>
+	/// <returns></returns>
 	public async ValueTask LogAsync<T>(T data)
 	{
 		await _jsm.InvokeVoidAsync("Log", data);
 	}
 
+	/// <summary>
+	///		调用 js，弹出 alert 窗口，显示指定的消息。
+	/// </summary>
+	/// <param name="msg"></param>
+	/// <returns></returns>
 	public async Task AlertAsync(string msg)
 	{
 		await _jsm.InvokeVoidAsync("alert", msg);
@@ -84,10 +118,10 @@ public partial class JSOp
 public partial class JSOp
 {
 	/// <summary>
-	///		通过 URL 下载文件。将这个 url 直接给 a 标签，然后点击，让浏览器自己去下载。
+	///		通过 URL 下载文件。
+	///		会将这个 url 直接给 a 标签，然后点击，让浏览器自己去下载。
 	/// </summary>
 	/// <param name="url"></param>
-	/// <param name="fileName"></param>
 	/// <returns></returns>
 	public async ValueTask DownloadFromUrl(string url)
 	{

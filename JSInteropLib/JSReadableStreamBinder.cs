@@ -3,6 +3,9 @@ using Microsoft.JSInterop;
 
 namespace JSInteropLib;
 
+/// <summary>
+///		封装 js 中的可读流。
+/// </summary>
 public partial class JSReadableStreamBinder :
 	Stream,
 	IJSObjectProjection,
@@ -20,6 +23,11 @@ public partial class JSReadableStreamBinder :
 	}
 
 	private bool _disposed = false;
+
+	/// <summary>
+	///		异步释放。
+	/// </summary>
+	/// <returns></returns>
 	public override async ValueTask DisposeAsync()
 	{
 		if (_disposed)
@@ -99,10 +107,19 @@ public partial class JSReadableStreamBinder :
 		}
 	}
 
+	/// <summary>
+	///		本类对象在 js 侧的镜像。
+	/// </summary>
 	public IJSObjectReference Projection { get; private set; } = default!;
 
 	private JoinedStream _joined_stream;
 
+	/// <summary>
+	///		读取 js 可读流。
+	/// </summary>
+	/// <param name="buffer"></param>
+	/// <param name="cancellationToken"></param>
+	/// <returns></returns>
 	public override async ValueTask<int> ReadAsync(Memory<byte> buffer,
 		CancellationToken cancellationToken = default)
 	{
@@ -125,6 +142,12 @@ public partial class JSReadableStreamBinder :
 
 	public event Action<PositionChangeEventArgs>? PositionChangedEvent;
 
+	/// <summary>
+	///		迭代到下一个流。
+	///		js 可读流每次读取会读取一大块切片，这里将这个切片一次性读取到 MemoryStream 中，
+	///		读完一个切片后需要切换下一个切片。
+	/// </summary>
+	/// <returns></returns>
 	public async ValueTask<bool> MoveNextAsync()
 	{
 		try
@@ -140,6 +163,9 @@ public partial class JSReadableStreamBinder :
 		return false;
 	}
 
+	/// <summary>
+	///		当前切片被拷贝到 MemoryStream 后会赋值到这里。
+	/// </summary>
 	public Stream Current { get; private set; } = default!;
 }
 

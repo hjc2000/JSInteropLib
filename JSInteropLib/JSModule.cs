@@ -3,9 +3,16 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace JSInteropLib;
 
+/// <summary>
+///		简化导入 js 模块的过程。
+/// </summary>
 public class JSModule : IJSObjectReference
 {
-	#region 生命周期
+	/// <summary>
+	///		构造函数
+	/// </summary>
+	/// <param name="jsrt">js 运行时。</param>
+	/// <param name="js_file_path">要导入的 js 模块的路径。</param>
 	public JSModule(IJSRuntime jsrt, string js_file_path)
 	{
 		Init(jsrt, js_file_path);
@@ -20,6 +27,11 @@ public class JSModule : IJSObjectReference
 	}
 
 	private bool _disposed = false;
+
+	/// <summary>
+	///		释放后模块不再可用。
+	/// </summary>
+	/// <returns></returns>
 	public async ValueTask DisposeAsync()
 	{
 		if (_disposed)
@@ -35,7 +47,6 @@ public class JSModule : IJSObjectReference
 			await Module.DisposeAsync();
 		}
 	}
-	#endregion
 
 	/// <summary>
 	/// 用户构建此类对象时导入的自定义模块

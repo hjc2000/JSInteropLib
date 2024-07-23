@@ -1,14 +1,27 @@
 ﻿using Microsoft.JSInterop;
 
 namespace JSInteropLib;
+
+/// <summary>
+///		帮助简化将回调函数传给 js，让 js 调用的过程。
+/// </summary>
 public class CallbackHelper : IAsyncDisposable
 {
+	/// <summary>
+	///		构造函数。
+	/// </summary>
 	public CallbackHelper()
 	{
 		DotNetHelper = DotNetObjectReference.Create(this);
 	}
 
 	private bool _disposed = false;
+
+	/// <summary>
+	///		异步释放。
+	///		释放后，回调不可用，js 如果在释放后调用回调，会引发无法预知的结果。
+	/// </summary>
+	/// <returns></returns>
 	public async ValueTask DisposeAsync()
 	{
 		if (_disposed)
@@ -45,14 +58,27 @@ public class CallbackHelper : IAsyncDisposable
 	}
 }
 
+/// <summary>
+///		帮助简化将回调函数传给 js，让 js 调用的过程。
+/// </summary>
+/// <typeparam name="T"></typeparam>
 public class CallbackHelper<T> : IAsyncDisposable
 {
+	/// <summary>
+	///		构造函数
+	/// </summary>
 	public CallbackHelper()
 	{
 		DotNetHelper = DotNetObjectReference.Create(this);
 	}
 
 	private bool _disposed = false;
+
+	/// <summary>
+	///		异步释放。
+	///		释放后，回调不可用，js 如果在释放后调用回调，会引发无法预知的结果。
+	/// </summary>
+	/// <returns></returns>
 	public async ValueTask DisposeAsync()
 	{
 		if (_disposed)
